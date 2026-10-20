@@ -2,38 +2,26 @@
 import { h } from './dom.js';
 import { cardEl } from './cards.js';
 import { rankingsSheet, termsSheet } from './rankings.js';
-import { PERSONALITIES, showOf } from '../strategy/personalities.js';
 import { seg, field } from './setup.js';
-
-const STRUCT = { cash: 'cash game', tournament: 'tournament' };
-const BET = { NL: 'No-limit', PL: 'Pot-limit', FL: 'Fixed-limit' };
-
-const list = (names) => (names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`);
-
-/** What "Play" will deal, in one line. */
-function tableSummary(s) {
-  const names = s.opponents.map((id) => PERSONALITIES[id]?.name || id);
-  return `${BET[s.betting]} ${STRUCT[s.structure]} vs ${list(names)} (${showOf(s.show).name})`;
-}
 
 /**
  * opts: { resumable, firstVisit, onPlay(), onNewGame(), onHowTo(), onSettings() }
  */
-export function renderHome(root, settings, opts) {
+export function renderHome(root, opts) {
   const fan = h('div.home-fan', { 'aria-hidden': 'true' }, cardEl('As', [74, 104]), cardEl('Kh', [74, 104]));
-  const play = h('button.btn.primary.xl', { type: 'button', onclick: opts.onPlay }, opts.resumable ? 'Resume game' : 'Play');
+  const btn = (label, onclick) => h('button.btn.secondary', { type: 'button', onclick }, label);
   root.replaceChildren(h('div.home', {},
     fan,
     h('p.presents', {}, 'The Rayze Company presents'),
     h('h1', {}, 'Pure Poker Sim'),
-    h('p.tagline', {}, 'Texas Hold’em against characters from your favorite comedies, with a coach that explains every decision.'),
+    h('p.tagline', {}, 'Texas Hold’em against characters from your favorite comedies, with an optional coach.'),
     h('div.home-actions', {},
-      play,
-      h('p.home-sub', {}, opts.resumable ? 'Pick up the hand you left.' : tableSummary(settings)),
+      // Play opens the game setup; once a game is running it resumes, and New game moves to the row below
+      h('button.btn.primary.xl', { type: 'button', onclick: opts.onPlay }, opts.resumable ? 'Resume game' : 'Play'),
       h('div.home-row', {},
-        h('button.btn.secondary', { type: 'button', onclick: opts.onNewGame }, 'New game'),
-        h('button.btn.secondary', { type: 'button', onclick: opts.onHowTo }, 'How to play'),
-        h('button.btn.secondary', { type: 'button', onclick: opts.onSettings }, 'Settings'))),
+        opts.resumable ? btn('New game', opts.onNewGame) : null,
+        btn('How to play', opts.onHowTo),
+        btn('Settings', opts.onSettings))),
     opts.firstVisit ? h('p.home-hint', {}, 'New to poker? Start with How to play. It takes two minutes.') : null,
   ));
 }

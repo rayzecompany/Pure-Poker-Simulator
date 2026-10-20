@@ -31,7 +31,7 @@ const menuBtn = h('button.btn.ghost.sm', { type: 'button', hidden: true, onclick
 const main = h('main.page');
 const shell = h('div.shell', {},
   h('header.topbar', {},
-    h('button.brand', { type: 'button', title: 'Main menu', onclick: () => showHome() }, 'Pure Poker Sim'),
+    h('button.brand', { type: 'button', title: 'Main menu', onclick: () => showHome() }, 'Pure Poker Sim', h('small', {}, `v${__VERSION__}`)),
     stats, h('span.spacer'), h('div.tools', {}, rankBtn, coachBtn, settingsBtn, menuBtn)),
   main);
 const made = h('footer.made', {}, h('span', {}, 'Made by'), h('img', { src: logo, alt: 'The Rayze Company' }));
@@ -53,7 +53,7 @@ const signed = (n, f = (x) => x) => `${n > 0 ? '+' : n < 0 ? '−' : ''}${f(Math
 // ---------- screens ----------
 
 const resumable = () => !!S && !S.over;
-const play = () => (resumable() ? resume() : startSession(settings));
+const play = () => (resumable() ? resume() : showNewGame());
 
 /** Leave the table (if we're at it) for another screen. The game waits. */
 function leavePlay(screen) {
@@ -68,7 +68,7 @@ function leavePlay(screen) {
 
 function showHome() {
   leavePlay('home');
-  renderHome(main, settings, {
+  renderHome(main, {
     resumable: resumable(),
     firstVisit,
     onPlay: play,
