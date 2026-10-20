@@ -1,0 +1,2 @@
+- Helpers now start off: coach, win-chance bar, hand reviews and the hand-rankings button. Turn them on in Settings.
+- New Coach switch in Settings shows or hides the coach panel.

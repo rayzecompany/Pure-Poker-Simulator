@@ -59,6 +59,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v') || inputs.tag != ''
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with: { path: out, merge-multiple: true }
       - uses: softprops/action-gh-release@v2
@@ -67,16 +68,4 @@ jobs:
           target_commitish: ${{ github.sha }}
           name: Pure Poker Sim ${{ inputs.tag || github.ref_name }}
           files: out/*
-          body: |
-            **Pure Poker Sim**, a production of The Rayze Company.
-
-            Learn Texas Hold'em against characters from Community, The Office, The Good Place, Parks and Recreation, Brooklyn Nine-Nine and Superstore. Every opponent plays strong, theory-based poker with its own small personality twist, and a built-in coach explains your options and reviews every hand.
-
-            - No-limit, pot-limit or fixed-limit; cash games or tournaments; 1–7 opponents
-            - Fair dealing: a cryptographic shuffle, tested every build against true poker odds ([FAIRNESS.md](https://github.com/${{ github.repository }}/blob/${{ inputs.tag || github.ref_name }}/docs/FAIRNESS.md))
-            - Win-chance readout, hand rankings, a poker glossary, and a two-minute How to Play guide
-            - Fully offline, free and open source (MIT)
-
-            **Download**
-            - **Windows:** `Pure-Poker-Sim-*-Windows.exe`. Double-click it; nothing to install. If SmartScreen warns, choose *More info → Run anyway*.
-            - **Mac (Intel and Apple Silicon):** `Pure-Poker-Sim-*-Mac.dmg`. Open it and drag Pure Poker Sim to Applications. The first time, right-click the app and choose *Open*.
+          body_path: RELEASE_NOTES.md
