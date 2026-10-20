@@ -1,0 +1,82 @@
+{
+  "name": "pure-poker-sim",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5183 --strictPort",
+    "build": "vite build",
+    "test": "node --test \"tests/**/*.test.js\"",
+    "app": "vite build && electron .",
+    "dist:win": "vite build && electron-builder --win --publish never",
+    "dist:mac": "vite build && electron-builder --mac --publish never"
+  },
+  "devDependencies": {
+    "electron": "44.9.1",
+    "electron-builder": "26.15.3",
+    "motion": "^12.4.7",
+    "vite": "^6.3.5",
+    "vite-plugin-singlefile": "^2.2.0"
+  },
+  "productName": "Pure Poker Sim",
+  "description": "Texas Hold’em trainer with TV-comedy opponents and a built-in coach. A production of The Rayze Company.",
+  "author": "The Rayze Company",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rayzecompany/Pure-Poker-Simulator"
+  },
+  "main": "electron/main.cjs",
+  "build": {
+    "appId": "com.rayzecompany.purepokersim",
+    "productName": "Pure Poker Sim",
+    "copyright": "Copyright © 2026 The Rayze Company",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**",
+      "electron/**",
+      "package.json"
+    ],
+    "artifactName": "Pure-Poker-Sim-${version}-${os}-${arch}.${ext}",
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png"
+    },
+    "portable": {
+      "artifactName": "Pure-Poker-Sim-${version}-Windows.exe"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "category": "public.app-category.card-games",
+      "identity": "-",
+      "hardenedRuntime": false
+    },
+    "dmg": {
+      "artifactName": "Pure-Poker-Sim-${version}-Mac.dmg"
+    }
+  }
+}
