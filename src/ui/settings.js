@@ -16,11 +16,13 @@ export const DEFAULTS = {
   handsPerLevel: 10,
   autoRebuy: true,
   speed: 'normal',
-  equity: true,
-  rankings: true,
+  // helpers start off; players turn them on in Settings
+  coach: false,
+  equity: false,
+  rankings: false,
+  autoReview: false,
   positions: true,
   fourColor: false,
-  autoReview: true,
   units: 'chips',
   autoDeal: false,
 };

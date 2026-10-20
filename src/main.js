@@ -41,6 +41,8 @@ popover(rankBtn, rankingsSheet);
 function applyDisplay() {
   document.body.classList.toggle('four', !!settings.fourColor);
   rankBtn.hidden = !settings.rankings;
+  coachBtn.hidden = !settings.coach || main.className !== 'play-main';
+  if (S) S.panelWrap.hidden = !settings.coach;
 }
 
 const bigBlind = () => S?.game.state.bigBlind || settings.bb;
@@ -128,7 +130,7 @@ function startSession(s) {
   const panelWrap = h('div.panel-wrap');
   const view = h('div.play', {}, h('div.table-col', {}, felt, barEl), panelWrap);
   S = {
-    settings: structuredClone(s), game, view, paused: false, over: false, bots: {},
+    settings: structuredClone(s), game, view, panelWrap, paused: false, over: false, bots: {},
     deltas: new Map(), hands: 0, buyins: s.stackBB * s.bb, startStack: 0, liveKey: '', autoTimer: 0,
   };
   S.table = createTable(felt, { fmt, settings, handsPerLevel: s.structure === 'tournament' ? s.handsPerLevel : 0, heroCardSize });
@@ -163,7 +165,7 @@ function showPlay() {
   main.className = 'play-main';
   delete main.dataset.screen;
   main.replaceChildren(S.view);
-  coachBtn.hidden = settingsBtn.hidden = menuBtn.hidden = stats.hidden = false;
+  settingsBtn.hidden = menuBtn.hidden = stats.hidden = false;
   applyDisplay();
   S.table.render(S.game.state);
   S.liveKey = '';
@@ -253,7 +255,7 @@ async function handEnd() {
   S.hands++;
   S.panel.renderHistory(g.history || [], S.deltas);
   const rec = g.history?.[g.history.length - 1];
-  if (settings.autoReview && rec?.heroDecisions?.length) S.panel.review(rec, true);
+  if (settings.coach && settings.autoReview && rec?.heroDecisions?.length) S.panel.review(rec, true);
   updateStats();
 
   const alive = st.seats.filter((s) => s.stack > 0 && !s.busted);
@@ -266,7 +268,7 @@ async function handEnd() {
   if (tourney && (heroOut || alive.length === 1)) {
     S.over = true;
     const [title, text] = heroOut
-      ? [`You finished ${ordinal(alive.length + 1)}`, `Out after ${S.hands} hands. Every hand is in History with a coach review.`]
+      ? [`You finished ${ordinal(alive.length + 1)}`, `Out after ${S.hands} hands.`]
       : ['You won the tournament', `You took every chip in ${S.hands} hands.`];
     return resultCard(title, text, [{ label: 'Main menu', onclick: () => showHome() }, { label: 'Play again', primary: true, onclick: () => restart() }]);
   }
@@ -359,7 +361,7 @@ document.addEventListener('keydown', (e) => {
   if (S.bar.key(e)) { e.preventDefault(); return; }
   const k = e.key.toLowerCase();
   const typing = e.target instanceof HTMLInputElement && e.target.type === 'number';
-  if (k === 'a' && !typing && S.bar.live) { e.preventDefault(); if (!S.panel.isOpen) coachBtn.click(); S.panel.advise(); }
+  if (k === 'a' && !typing && settings.coach && S.bar.live) { e.preventDefault(); if (!S.panel.isOpen) coachBtn.click(); S.panel.advise(); }
   if (k === 'n' && !typing && S.game.state.street === 'complete') {
     const btn = [...document.querySelectorAll('.actionbar .btn.primary')].find((b) => b.textContent.startsWith('Next hand'));
     if (btn) { e.preventDefault(); btn.click(); }
