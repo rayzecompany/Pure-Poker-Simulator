@@ -1,2 +1,3 @@
-- Helpers now start off: coach, win-chance bar, hand reviews and the hand-rankings button. Turn them on in Settings.
-- New Coach switch in Settings shows or hides the coach panel.
+- Play opens the game setup so you can confirm settings first. With a game in progress it becomes Resume game, and New game moves to the row below.
+- Version number shown under the title.
+- Simpler README.
