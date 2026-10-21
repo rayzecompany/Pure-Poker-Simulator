@@ -1,4 +1,4 @@
-# Pure Poker Sim
+# Pure Poker Simulator
 
 Texas Hold'em against characters from six TV comedies, with an optional coach. A production of The Rayze Company.
 
